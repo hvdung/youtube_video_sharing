@@ -16,6 +16,12 @@ Rails.application.routes.draw do
       post "auth/refresh", to: "token#refresh"
 
       get "me", to: "users#me"
+
+      resources :users, only: [] do
+        resources :videos, only: [:index, :create, :destroy]
+      end
+
+      resources :videos, only: [:index]
     end
   end
 

@@ -9,4 +9,5 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 100 }
 
   has_many :refresh_tokens, dependent: :destroy
+  has_many :videos, dependent: :destroy
 end
