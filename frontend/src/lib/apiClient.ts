@@ -9,12 +9,13 @@ const apiClient = axios.create({
   },
 })
 
-// Request interceptor: attach access token from localStorage
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('access_token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
     return config
   },
@@ -38,12 +39,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = []
 }
 
-// Response interceptor: handle 401 and refresh access token
 apiClient.interceptors.response.use(
   (response) => {
-    // Extract new access token from Authorization header if present
     const newToken = response.headers['authorization']
-    if (newToken) {
+    if (newToken && typeof window !== 'undefined') {
       const tokenValue = newToken.replace('Bearer ', '')
       localStorage.setItem('access_token', tokenValue)
     }
@@ -68,13 +67,15 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true
       isRefreshing = true
 
-      const refreshToken = localStorage.getItem('refresh_token')
+      const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refresh_token') : null
 
       if (!refreshToken) {
         isRefreshing = false
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-        window.location.href = '/login'
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+          window.location.href = '/login'
+        }
         return Promise.reject(error)
       }
 
@@ -86,11 +87,13 @@ apiClient.interceptors.response.use(
         const newAccessToken = response.headers['authorization']?.replace('Bearer ', '')
         const newRefreshToken = response.data.refresh_token
 
-        if (newAccessToken) {
-          localStorage.setItem('access_token', newAccessToken)
-        }
-        if (newRefreshToken) {
-          localStorage.setItem('refresh_token', newRefreshToken)
+        if (typeof window !== 'undefined') {
+          if (newAccessToken) {
+            localStorage.setItem('access_token', newAccessToken)
+          }
+          if (newRefreshToken) {
+            localStorage.setItem('refresh_token', newRefreshToken)
+          }
         }
 
         processQueue(null, newAccessToken || '')
@@ -98,9 +101,11 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError, null)
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-        window.location.href = '/login'
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
+          window.location.href = '/login'
+        }
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

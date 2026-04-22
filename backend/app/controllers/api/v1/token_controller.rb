@@ -1,7 +1,6 @@
 module Api
   module V1
     class TokenController < ApplicationController
-      skip_before_action :authenticate_user!
 
       def refresh
         token_string = params[:refresh_token]

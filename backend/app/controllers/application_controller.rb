@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
-  include Devise::Controllers::Helpers
+  include ActionController::Cookies
+  
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
@@ -7,11 +9,24 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_user!
-    render json: { error: "Unauthorized" }, status: :unauthorized unless current_user
+    token = request.headers['Authorization']&.split(' ')&.last
+    return render json: { error: "Unauthorized" }, status: :unauthorized unless token
+
+    begin
+      decoded = JWT.decode(token, ENV.fetch("DEVISE_JWT_SECRET_KEY", "fallback_secret_key_change_in_production"), true, { algorithm: 'HS256' })
+      @current_user = User.find(decoded[0]['sub'])
+    rescue JWT::DecodeError, ActiveRecord::RecordNotFound
+      render json: { error: "Unauthorized" }, status: :unauthorized
+    end
   end
 
   def current_user
-    @current_user ||= warden.user(:user)
+    @current_user
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name])
   end
 
   def not_found(exception)

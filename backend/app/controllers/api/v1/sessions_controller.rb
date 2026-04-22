@@ -9,6 +9,12 @@ module Api
         if resource&.valid_password?(resource_params[:password])
           sign_in(resource_name, resource)
           refresh_token = generate_refresh_token(resource)
+          
+          # Generate JWT token
+          jwt_token = Warden::JWTAuth::UserEncoder.new.call(resource, :user, nil).first
+          
+          # Set Authorization header
+          response.set_header("Authorization", "Bearer #{jwt_token}")
 
           render json: {
             message: "Logged in successfully",

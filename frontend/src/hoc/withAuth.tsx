@@ -2,8 +2,12 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/shared/hooks/useAuth'
 
+/**
+ * Higher-Order Component for protected routes
+ * Redirects unauthenticated users to login page
+ */
 export default function withAuth<T extends object>(Component: React.ComponentType<T>) {
   return function ProtectedComponent(props: T) {
     const { isAuthenticated, isLoading } = useAuth()
