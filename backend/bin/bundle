@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+#
+# This file loads Rails and bundles gem execution.
+# This file is auto-generated during the `rails new` command.
+
+require_relative "../config/boot"
+
+require "bundler/setup"
+load Gem.bin_path("bundler", "bundle")

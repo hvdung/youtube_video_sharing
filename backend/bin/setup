@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../config/boot"
+require "rails/commands/server/server_command"
+
+Rails::Command::ServerCommand.new([], port: 3000, binding: "0.0.0.0").perform
