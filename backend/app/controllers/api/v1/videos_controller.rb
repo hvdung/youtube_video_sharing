@@ -5,7 +5,7 @@ module Api
       before_action :set_user, only: [:index, :create, :destroy]
 
       def index
-        result = Api::V1::Videos::IndexService.new(@user).call
+        result = Api::V1::Videos::IndexService.new(user: @user).call
         
         render json: result, status: :ok
       end
@@ -17,15 +17,16 @@ module Api
       end
 
       def destroy
-        result = Api::V1::Videos::DestroyService.new(@user, params[:id]).call
+        result = Api::V1::Videos::DestroyService.new(current_user, params[:id]).call
         
-        render json: result, status: :ok
+        status = result[:status] || (result[:success] ? :ok : :unprocessable_entity)
+        render json: result, status: status
       end
 
       private
 
       def set_user
-        @user ||= User.find(params[:user_id]) if params[:user_id]
+        @user = User.find(params[:user_id]) if params[:user_id]
       end
     end
   end

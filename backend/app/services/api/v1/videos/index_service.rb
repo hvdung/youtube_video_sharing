@@ -4,12 +4,13 @@ module Api
       class IndexService
         attr_reader :user
 
-        def initialize(user)
+        def initialize(user: nil)
           @user = user
         end
 
         def call
-          videos = user.videos.order(created_at: :desc)
+          scope = user ? user.videos : Video.all
+          videos = scope.includes(:user).order(created_at: :desc)
           
           {
             success: true,

@@ -18,10 +18,10 @@ Rails.application.routes.draw do
       get "me", to: "users#me"
 
       resources :users, only: [] do
-        resources :videos, only: [:index, :create, :destroy]
+        resources :videos, only: [:index, :create]
       end
 
-      resources :videos, only: [:index]
+      resources :videos, only: [:index, :destroy]
     end
   end
 

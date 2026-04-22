@@ -24,7 +24,7 @@ export const useLoginLogic = () => {
         const result = await login(data.email, data.password)
 
         if (loginAsync.fulfilled.match(result)) {
-          router.push('/dashboard')
+          router.push('/videos')
         } else {
           setFormError('Login failed. Please check your credentials.')
         }
