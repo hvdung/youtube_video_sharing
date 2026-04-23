@@ -22,6 +22,7 @@ class ShareVideoWorker
     # Broadcast tới tất cả client đang subscribe VideosChannel
     ActionCable.server.broadcast("videos_feed", {
       type:      "new_video",
+      user_id:   user.id,
       video_id:  video.id,
       title:     video.title,
       shared_by: user.email
