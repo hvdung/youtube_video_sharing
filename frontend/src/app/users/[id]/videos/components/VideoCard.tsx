@@ -20,12 +20,12 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
   const isOwner = user?.id === video.user_id
 
   return (
-    <div className="flex gap-6 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow relative">
+    <div className="flex gap-6 p-4 bg-white border-2 border-gray-900 rounded-lg hover:shadow-md transition-shadow relative">
       {isOwner && (
         <button
           onClick={() => handleDelete(video.id)}
           disabled={isDeleting}
-          className="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white rounded-full flex items-center justify-center transition-colors z-10"
+          className="absolute top-2 right-2 w-8 h-8 bg-gray-900 hover:bg-gray-700 disabled:bg-gray-400 text-white rounded-full flex items-center justify-center transition-colors z-10"
           title="Delete video"
         >
           {isDeleting ? (
@@ -88,7 +88,7 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-red-600 mb-2 truncate">{video.title}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">{video.title}</h3>
         <div className="text-sm text-gray-600 mb-2">
           <span>Shared by: {video.user_email || sharedBy}</span>
         </div>

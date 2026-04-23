@@ -28,6 +28,10 @@ module Api
       def set_user
         @user = User.find(params[:user_id]) if params[:user_id]
       end
+
+      def video_params
+        params.require(:video).permit(:url)
+      end
     end
   end
 end

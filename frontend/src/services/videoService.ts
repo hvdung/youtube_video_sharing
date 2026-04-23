@@ -16,4 +16,9 @@ export const videoService = {
     const response = await apiClient.delete(`/videos/${videoId}`)
     return response.data
   },
+
+  async createVideo(userId: number, url: string): Promise<{ success: boolean; message: string; video?: any }> {
+    const response = await apiClient.post(`/users/${userId}/videos`, { url })
+    return response.data
+  },
 }

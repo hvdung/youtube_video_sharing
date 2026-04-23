@@ -1,0 +1,21 @@
+---
+:concurrency: 5
+:timeout: 25
+:verbose: true
+:queues:
+  - default
+  - mailers
+  - video_processing
+
+# Development settings
+development:
+  :concurrency: 2
+
+# Production settings
+production:
+  :concurrency: 10
+  :timeout: 30
+
+# Staging settings
+staging:
+  :concurrency: 5

@@ -10,11 +10,8 @@ module Api
         end
 
         def call
-          video = Video.find_by(id: video_id)
-          
           return error_response('Video not found', :not_found) unless video
           
-          # Authorization: Only the video owner can delete it
           unless video.user_id == current_user&.id
             return error_response('You are not authorized to delete this video', :forbidden)
           end
@@ -27,6 +24,10 @@ module Api
         end
 
         private
+
+        def video
+          @video ||= Video.find_by(id: video_id)
+        end
 
         def success_response
           {

@@ -243,6 +243,10 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
+    redis (5.4.1)
+      redis-client (>= 0.22.0)
+    redis-client (0.28.0)
+      connection_pool
     regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -288,6 +292,12 @@ GEM
       rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    sidekiq (7.3.9)
+      base64
+      connection_pool (>= 2.3.0)
+      logger
+      rack (>= 2.2.4)
+      redis-client (>= 0.22.2)
     stringio (3.2.0)
     thor (1.5.0)
     timeout (0.6.1)
@@ -316,6 +326,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10)
   bootsnap
+  connection_pool (>= 2.4)
   debug
   devise (~> 4.9)
   devise-jwt (~> 0.11)
@@ -325,9 +336,11 @@ DEPENDENCIES
   puma (~> 6.0)
   rack-cors
   rails (~> 7.1.0)
+  redis (~> 5.0)
   rspec-rails
   rubocop
   rubocop-rails
+  sidekiq (~> 7.3)
 
 RUBY VERSION
    ruby 3.2.2p53

@@ -14,14 +14,14 @@ export default function VideoList({ videos, isLoading, error, sharedBy }: VideoL
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded">
+      <div className="bg-red-50 border-2 border-gray-900 text-red-700 px-4 py-3 rounded">
         <p className="font-medium">Error loading videos</p>
         <p className="text-sm">{error}</p>
       </div>
