@@ -88,12 +88,12 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">{video.title}</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">{video.title}</h3>
         <div className="text-sm text-gray-600 mb-2">
           <span>Shared by: {video.user_email || sharedBy}</span>
         </div>
         <div className="text-sm text-gray-700">
-          <p className="font-medium mb-1">Description:</p>
+          <p className="font-semibold mb-1">Description:</p>
           <p className="line-clamp-3 text-gray-600">
             {video.description || 'No description available'}
           </p>

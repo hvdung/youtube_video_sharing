@@ -1,8 +1,9 @@
 'use client'
 
+import withAuth from '@/hoc/withAuth'
 import ShareVideoForm from './components/ShareVideoForm'
 
-export default function SharePage() {
+function SharePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-5xl mx-auto px-4">
@@ -11,3 +12,5 @@ export default function SharePage() {
     </div>
   )
 }
+
+export default withAuth(SharePage)
