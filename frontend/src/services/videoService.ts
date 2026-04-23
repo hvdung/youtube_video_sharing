@@ -18,7 +18,7 @@ export const videoService = {
   },
 
   async createVideo(userId: number, url: string): Promise<{ success: boolean; message: string; video?: any }> {
-    const response = await apiClient.post(`/users/${userId}/videos`, { url })
+    const response = await apiClient.post(`/videos`, { url })
     return response.data
   },
 }

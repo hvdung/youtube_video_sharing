@@ -39,6 +39,10 @@ services:
       - backend_gems:/usr/local/bundle
     ports:
       - "3000:3000"
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./backend/.env
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db
@@ -64,6 +68,10 @@ services:
     volumes:
       - ./backend:/app
       - backend_gems:/usr/local/bundle
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./backend/.env
     environment:
       RAILS_ENV: development
       DATABASE_HOST: db

@@ -11,7 +11,7 @@ module Api
       end
 
       def create
-        result = Api::V1::Videos::CreateService.new(@user, video_params).call
+        result = Api::V1::Videos::CreateService.new(current_user, video_params).call
         
         render json: result, status: :ok
       end
