@@ -19,13 +19,13 @@ class ShareVideoWorker
       thumbnail_url: video_info[:thumbnail_url]
     )
 
-    # Broadcast notification
-    # ActionCable.server.broadcast("notifications", {
-    #   type:      "new_video",
-    #   video_id:  video.id,
-    #   title:     video.title,
-    #   shared_by: user.email
-    # })
+    # Broadcast tới tất cả client đang subscribe VideosChannel
+    ActionCable.server.broadcast("videos_feed", {
+      type:      "new_video",
+      video_id:  video.id,
+      title:     video.title,
+      shared_by: user.email
+    })
 
   rescue ActiveRecord::RecordNotUnique
     logger.warn "Duplicate video (youtube_id: #{youtube_id}) for user #{user_id}, skipping"

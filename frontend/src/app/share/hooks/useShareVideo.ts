@@ -44,7 +44,7 @@ export function useShareVideo() {
       if (result.success) {
         reset()
         toast('success', 'The video has been successfully shared.!')
-        router.push(`/users/${user.id}/videos`)
+        router.push(`/videos`)
       } else {
         toast('error', result.message || 'Failed to share video')
       }

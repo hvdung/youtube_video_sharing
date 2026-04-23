@@ -19,5 +19,6 @@ export const useAllVideosList = () => {
     isLoading,
     error,
     count,
+    refetch: fetchAllVideos,
   }
 }

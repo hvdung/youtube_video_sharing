@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   end
 
   get "health", to: proc { [200, {}, ["OK"]] }
+
+  mount ActionCable.server => "/cable"
 end

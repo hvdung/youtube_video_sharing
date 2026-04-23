@@ -1,10 +1,23 @@
 'use client'
 
+import { useCallback } from 'react'
 import { useAllVideosList } from './hooks/useAllVideosList'
+import { useActionCable } from '@/lib/useActionCable'
 import VideoList from '@/app/users/[id]/videos/components/VideoList'
 
 export default function AllVideosPage() {
-  const { videos, isLoading, error, count } = useAllVideosList()
+  const { videos, isLoading, error, count, refetch } = useAllVideosList()
+
+  const handleCableMessage = useCallback(
+    (data: Record<string, unknown>) => {
+      if (data.type === 'new_video') {
+        refetch()
+      }
+    },
+    [refetch]
+  )
+
+  useActionCable({ channel: 'VideosChannel', onMessage: handleCableMessage })
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
