@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { videoService } from '@/services/videoService'
 import { useRouter } from 'next/navigation'
+import { toast } from '@/lib/toast'
 
 const shareVideoSchema = z.object({
   youtubeUrl: z
@@ -20,7 +21,7 @@ type ShareVideoFormData = z.infer<typeof shareVideoSchema>
 export function useShareVideo() {
   const { user } = useAuth()
   const router = useRouter()
-  
+
   const {
     register,
     handleSubmit,
@@ -33,22 +34,29 @@ export function useShareVideo() {
 
   const onSubmit = async (data: ShareVideoFormData) => {
     if (!user?.id) {
-      alert('You must be logged in to share a video')
+      toast('error', 'You must be logged in to share a video')
       return
     }
 
     try {
       const result = await videoService.createVideo(user.id, data.youtubeUrl)
-      
+
       if (result.success) {
         reset()
+        toast('success', 'The video has been successfully shared.!')
         router.push(`/users/${user.id}/videos`)
       } else {
-        console.error(result.message || 'Failed to share video')
+        toast('error', result.message || 'Failed to share video')
       }
     } catch (error: any) {
-      console.error('Error sharing video:', error)
-      alert(error.response?.data?.message || 'Failed to share video')
+      const status = error.response?.status
+      const message = error.response?.data?.message
+
+      if (status === 409) {
+        toast('warning', message || 'The video has been shared.')
+      } else {
+        toast('error', message || 'Failed to share video')
+      }
     }
   }
 

@@ -12,8 +12,14 @@ module Api
 
       def create
         result = Api::V1::Videos::CreateService.new(current_user, video_params).call
-        
-        render json: result, status: :ok
+
+        if result[:duplicate]
+          render json: result, status: :conflict
+        elsif result[:success]
+          render json: result, status: :ok
+        else
+          render json: result, status: :unprocessable_entity
+        end
       end
 
       def destroy

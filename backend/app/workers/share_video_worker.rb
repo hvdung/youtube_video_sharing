@@ -7,7 +7,7 @@ class ShareVideoWorker
     return logger.warn "User #{user_id} not found" unless user
 
     youtube_id = Youtube::IdParser.call(video_url)
-    return logger.warn "Invalid YouTube URL: #{video_url}" if youtube_id.nil?
+    return if youtube_id.nil?
 
     video_info = Youtube::VideoFetcher.call(youtube_id)
 
@@ -19,8 +19,6 @@ class ShareVideoWorker
       thumbnail_url: video_info[:thumbnail_url]
     )
 
-    logger.info "Video created successfully: #{video.title} (ID: #{video.id})"
-
     # Broadcast notification
     # ActionCable.server.broadcast("notifications", {
     #   type:      "new_video",
@@ -29,11 +27,14 @@ class ShareVideoWorker
     #   shared_by: user.email
     # })
 
+  rescue ActiveRecord::RecordNotUnique
+    logger.warn "Duplicate video (youtube_id: #{youtube_id}) for user #{user_id}, skipping"
+
   rescue Youtube::VideoFetcher::VideoNotFound => e
     logger.error "Video not found: #{e.message}"
 
   rescue Youtube::VideoFetcher::ApiError => e
     logger.error "YouTube API error: #{e.message}"
-    raise e # Sidekiq tự retry
+    raise e
   end
 end

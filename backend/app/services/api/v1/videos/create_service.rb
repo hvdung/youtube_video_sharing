@@ -10,7 +10,17 @@ module Api
         end
 
         def call
-          ::ShareVideoWorker.perform_async(current_user.id, share_video_url)
+          url = share_video_url
+          youtube_id = Youtube::IdParser.call(url)
+
+          return { success: false, message: "Invalid YouTube URL" } if youtube_id.nil?
+
+          if current_user.videos.exists?(youtube_id: youtube_id)
+            return { success: false, duplicate: true, message: "The video has been shared." }
+          end
+
+          ::ShareVideoWorker.perform_async(current_user.id, url)
+          { success: true, message: "Video is being processed" }
         end
 
         private
