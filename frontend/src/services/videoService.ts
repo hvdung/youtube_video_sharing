@@ -2,13 +2,13 @@ import apiClient from '@/lib/apiClient'
 import { VideoListResponse } from '@/types/video'
 
 export const videoService = {
-  async getVideosByUserId(userId: string): Promise<VideoListResponse> {
-    const response = await apiClient.get(`/users/${userId}/videos`)
+  async getVideosByUserId(userId: string, page = 1): Promise<VideoListResponse> {
+    const response = await apiClient.get(`/users/${userId}/videos`, { params: { page } })
     return response.data
   },
 
-  async getAllVideos(): Promise<VideoListResponse> {
-    const response = await apiClient.get('/videos')
+  async getAllVideos(page = 1): Promise<VideoListResponse> {
+    const response = await apiClient.get('/videos', { params: { page } })
     return response.data
   },
 

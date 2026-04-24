@@ -4,9 +4,10 @@ import { useCallback } from 'react'
 import { useAllVideosList } from './hooks/useAllVideosList'
 import { useActionCable } from '@/lib/useActionCable'
 import VideoList from '@/app/users/[id]/videos/components/VideoList'
+import Pagination from '@/shared/components/Pagination'
 
 export default function AllVideosPage() {
-  const { videos, isLoading, error, count, refetch } = useAllVideosList()
+  const { videos, isLoading, error, count, pagination, changePage, refetch } = useAllVideosList()
 
   const handleCableMessage = useCallback(
     (data: Record<string, unknown>) => {
@@ -27,11 +28,14 @@ export default function AllVideosPage() {
           {!isLoading && (
             <p className="text-sm text-gray-600 mt-1">
               {count} {count === 1 ? 'video' : 'videos'} available
+              {pagination && ` — page ${pagination.current_page} of ${pagination.total_pages}`}
             </p>
           )}
         </div>
 
         <VideoList videos={videos} isLoading={isLoading} error={error} sharedBy="" />
+
+        {pagination && <Pagination pagination={pagination} onPageChange={changePage} />}
       </div>
     </div>
   )

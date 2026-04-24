@@ -18,10 +18,15 @@ export function useActionCable({ channel, onMessage }: UseActionCableOptions) {
   }, [onMessage])
 
   useEffect(() => {
+    let destroyed = false
     const ws = new WebSocket(CABLE_URL)
     wsRef.current = ws
 
     ws.onopen = () => {
+      if (destroyed) {
+        ws.close()
+        return
+      }
       ws.send(
         JSON.stringify({
           command: 'subscribe',
@@ -31,6 +36,7 @@ export function useActionCable({ channel, onMessage }: UseActionCableOptions) {
     }
 
     ws.onmessage = (event) => {
+      if (destroyed) return
       const raw = JSON.parse(event.data)
 
       if (raw.type === 'ping' || raw.type === 'welcome' || raw.type === 'confirm_subscription') return
@@ -40,11 +46,14 @@ export function useActionCable({ channel, onMessage }: UseActionCableOptions) {
     }
 
     ws.onerror = (err) => {
-      console.error('[ActionCable] WebSocket error:', err)
+      if (!destroyed) console.error('[ActionCable] WebSocket error:', err)
     }
 
     return () => {
-      ws.close()
+      destroyed = true
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CLOSING) {
+        ws.close()
+      }
     }
   }, [channel])
 }

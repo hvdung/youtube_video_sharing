@@ -1,7 +1,7 @@
 'use client'
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { Video } from '@/types/video'
+import { Video, Pagination } from '@/types/video'
 import { videoService } from '@/services/videoService'
 
 interface VideoState {
@@ -9,6 +9,7 @@ interface VideoState {
   isLoading: boolean
   error: string | null
   count: number
+  pagination: Pagination | null
 }
 
 const initialState: VideoState = {
@@ -16,13 +17,14 @@ const initialState: VideoState = {
   isLoading: false,
   error: null,
   count: 0,
+  pagination: null,
 }
 
 export const fetchVideosByUserIdAsync = createAsyncThunk(
   'video/fetchByUserId',
-  async (userId: string, { rejectWithValue }) => {
+  async ({ userId, page = 1 }: { userId: string; page?: number }, { rejectWithValue }) => {
     try {
-      const response = await videoService.getVideosByUserId(userId)
+      const response = await videoService.getVideosByUserId(userId, page)
       return response
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch videos')
@@ -32,9 +34,9 @@ export const fetchVideosByUserIdAsync = createAsyncThunk(
 
 export const fetchAllVideosAsync = createAsyncThunk(
   'video/fetchAllVideos',
-  async (_, { rejectWithValue }) => {
+  async (page: number = 1, { rejectWithValue }) => {
     try {
-      const response = await videoService.getAllVideos()
+      const response = await videoService.getAllVideos(page)
       return response
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch videos')
@@ -64,6 +66,7 @@ const videoSlice = createSlice({
     clearVideos: (state) => {
       state.videos = []
       state.count = 0
+      state.pagination = null
     },
   },
   extraReducers: (builder) => {
@@ -76,6 +79,7 @@ const videoSlice = createSlice({
         state.isLoading = false
         state.videos = action.payload.videos
         state.count = action.payload.count
+        state.pagination = action.payload.pagination
         state.error = null
       })
       .addCase(fetchVideosByUserIdAsync.rejected, (state, action) => {
@@ -92,6 +96,7 @@ const videoSlice = createSlice({
         state.isLoading = false
         state.videos = action.payload.videos
         state.count = action.payload.count
+        state.pagination = action.payload.pagination
         state.error = null
       })
       .addCase(fetchAllVideosAsync.rejected, (state, action) => {

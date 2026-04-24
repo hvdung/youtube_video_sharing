@@ -5,7 +5,7 @@ module Api
       before_action :set_user, only: [:index, :create, :destroy]
 
       def index
-        result = Api::V1::Videos::IndexService.new(user: @user).call
+        result = Api::V1::Videos::IndexService.new(user: @user, page: params[:page] || 1).call
         
         render json: result, status: :ok
       end

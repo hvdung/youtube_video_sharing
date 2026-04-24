@@ -11,18 +11,18 @@ import {
 
 export const useVideos = () => {
   const dispatch = useAppDispatch()
-  const { videos, isLoading, error, count } = useAppSelector((state) => state.video)
+  const { videos, isLoading, error, count, pagination } = useAppSelector((state) => state.video)
 
   const fetchVideosByUserId = useCallback(
-    async (userId: string) => {
-      const result = await dispatch(fetchVideosByUserIdAsync(userId))
+    async (userId: string, page = 1) => {
+      const result = await dispatch(fetchVideosByUserIdAsync({ userId, page }))
       return result
     },
     [dispatch]
   )
 
-  const fetchAllVideos = useCallback(async () => {
-    const result = await dispatch(fetchAllVideosAsync())
+  const fetchAllVideos = useCallback(async (page = 1) => {
+    const result = await dispatch(fetchAllVideosAsync(page))
     return result
   }, [dispatch])
 
@@ -39,6 +39,7 @@ export const useVideos = () => {
     isLoading,
     error,
     count,
+    pagination,
     fetchVideosByUserId,
     fetchAllVideos,
     clearError: clearVideoError,

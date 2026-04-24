@@ -1,24 +1,32 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useVideos } from '@/shared/hooks/useVideos'
 
 export const useAllVideosList = () => {
-  const { videos, isLoading, error, count, fetchAllVideos, clearVideos } = useVideos()
+  const { videos, isLoading, error, count, pagination, fetchAllVideos, clearVideos } = useVideos()
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
-    fetchAllVideos()
+    fetchAllVideos(currentPage)
 
     return () => {
       clearVideos()
     }
-  }, [fetchAllVideos, clearVideos])
+  }, [currentPage, fetchAllVideos, clearVideos])
+
+  const changePage = useCallback((page: number) => {
+    setCurrentPage(page)
+  }, [])
 
   return {
     videos,
     isLoading,
     error,
     count,
-    refetch: fetchAllVideos,
+    pagination,
+    currentPage,
+    changePage,
+    refetch: () => fetchAllVideos(currentPage),
   }
 }
