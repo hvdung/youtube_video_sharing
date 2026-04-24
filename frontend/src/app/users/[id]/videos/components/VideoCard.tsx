@@ -62,7 +62,11 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
           </div>
         )}
         <div className="absolute bottom-2 left-2 right-2 flex items-center gap-2">
-          <button className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100">
+          <button
+            onClick={() => window.open(video.url, '_blank', 'noopener,noreferrer')}
+            title="Watch on YouTube"
+            className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100"
+          >
             <svg className="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>

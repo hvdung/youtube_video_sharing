@@ -316,6 +316,8 @@ GEM
       rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    shoulda-matchers (6.5.0)
+      activesupport (>= 5.2.0)
     sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
@@ -370,6 +372,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-rails
+  shoulda-matchers (~> 6.0)
   sidekiq (~> 7.3)
   yt (~> 0.34.0)
 
