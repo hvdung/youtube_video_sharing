@@ -84,19 +84,24 @@ apiClient.interceptors.response.use(
           refresh_token: refreshToken,
         })
 
-        const newAccessToken = response.headers['authorization']?.replace('Bearer ', '')
-        const newRefreshToken = response.data.refresh_token
+        // Token có thể ở header Authorization hoặc response body
+        const authHeader = response.headers['authorization'] || response.headers['Authorization']
+        const newAccessToken = authHeader?.replace('Bearer ', '') || null
+        const newRefreshToken = response.data?.refresh_token || null
+
+        if (!newAccessToken) {
+          // Refresh thành công nhưng không có token mới — force logout
+          throw new Error('No access token in refresh response')
+        }
 
         if (typeof window !== 'undefined') {
-          if (newAccessToken) {
-            localStorage.setItem('access_token', newAccessToken)
-          }
+          localStorage.setItem('access_token', newAccessToken)
           if (newRefreshToken) {
             localStorage.setItem('refresh_token', newRefreshToken)
           }
         }
 
-        processQueue(null, newAccessToken || '')
+        processQueue(null, newAccessToken)
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         return apiClient(originalRequest)
       } catch (refreshError) {

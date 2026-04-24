@@ -1,7 +1,7 @@
 module Api
   module V1
     class VideosController < ApplicationController
-      before_action :authenticate_user!
+      before_action :authenticate_user!, only: %i[create destroy]
       before_action :set_user, only: %i[index create destroy]
 
       def index

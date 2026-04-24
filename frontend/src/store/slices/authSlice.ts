@@ -78,10 +78,6 @@ export const fetchCurrentUserAsync = createAsyncThunk(
       const user = await authService.getMe()
       return user
     } catch (error: any) {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-      }
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user')
     }
   }
@@ -95,7 +91,6 @@ export const logoutAsync = createAsyncThunk('auth/logout', async (_, { rejectWit
       localStorage.removeItem('refresh_token')
     }
   } catch (error: any) {
-    // Logout locally even if API call fails
     if (typeof window !== 'undefined') {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
@@ -104,7 +99,6 @@ export const logoutAsync = createAsyncThunk('auth/logout', async (_, { rejectWit
   }
 })
 
-// Create the slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -118,7 +112,6 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Login
     builder
       .addCase(loginAsync.pending, (state) => {
         state.isLoading = true
@@ -135,7 +128,6 @@ const authSlice = createSlice({
         state.error = action.payload as string
       })
 
-    // Register
     builder
       .addCase(registerAsync.pending, (state) => {
         state.isLoading = true
@@ -150,7 +142,6 @@ const authSlice = createSlice({
         state.error = action.payload as string
       })
 
-    // Fetch current user
     builder
       .addCase(fetchCurrentUserAsync.pending, (state) => {
         state.isLoading = true
@@ -166,7 +157,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false
       })
 
-    // Logout
     builder
       .addCase(logoutAsync.pending, (state) => {
         state.isLoading = true
