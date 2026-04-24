@@ -10,29 +10,31 @@ module Api
         end
 
         def call
-          return error_response('Video not found', :not_found) unless video
-          
+          return error_response("Video not found", :not_found) unless video
+
           unless video.user_id == current_user&.id
-            return error_response('You are not authorized to delete this video', :forbidden)
+            return error_response("You are not authorized to delete this video", :forbidden)
           end
-          
+
           if video.destroy
             success_response
           else
-            error_response('Failed to delete video', :unprocessable_entity)
+            error_response("Failed to delete video", :unprocessable_entity)
           end
         end
 
         private
 
         def video
-          @video ||= Video.find_by(id: video_id)
+          return @video if defined?(@video)
+
+          @video = Video.find_by(id: video_id)
         end
 
         def success_response
           {
             success: true,
-            message: 'Video deleted successfully'
+            message: "Video deleted successfully"
           }
         end
 

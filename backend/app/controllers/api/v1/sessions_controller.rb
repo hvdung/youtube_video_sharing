@@ -9,10 +9,10 @@ module Api
         if resource&.valid_password?(resource_params[:password])
           sign_in(resource_name, resource)
           refresh_token = generate_refresh_token(resource)
-          
+
           # Generate JWT token
           jwt_token = Warden::JWTAuth::UserEncoder.new.call(resource, :user, nil).first
-          
+
           # Set Authorization header
           response.set_header("Authorization", "Bearer #{jwt_token}")
 
@@ -35,7 +35,7 @@ module Api
           current_user&.refresh_tokens&.delete_all
           render json: { message: "Logged out successfully" }, status: :ok
         else
-          render json: { error: "Logout failed" }, status: :unprocessable_entity
+          render json: { error: "Logout failed" }, status: :unprocessable_content
         end
       end
 

@@ -6,7 +6,7 @@ module Youtube
     #   - https://youtu.be/VIDEO_ID
     #   - https://www.youtube.com/embed/VIDEO_ID
     #   - https://www.youtube.com/v/VIDEO_ID
-    
+
     YOUTUBE_REGEX = %r{
       (?:https?://)?
       (?:www\.)?
@@ -15,7 +15,7 @@ module Youtube
         youtu\.be/
       )
       ([\w-]{11})  # YouTube video IDs are always 11 characters
-    }xi
+    }xi.freeze
 
     attr_reader :url
 
@@ -29,7 +29,7 @@ module Youtube
 
     def call
       return nil if url.blank?
-      
+
       match = url.match(YOUTUBE_REGEX)
       match ? match[1] : nil
     end

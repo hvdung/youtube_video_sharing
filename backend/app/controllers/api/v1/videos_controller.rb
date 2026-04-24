@@ -2,11 +2,11 @@ module Api
   module V1
     class VideosController < ApplicationController
       before_action :authenticate_user!
-      before_action :set_user, only: [:index, :create, :destroy]
+      before_action :set_user, only: %i[index create destroy]
 
       def index
         result = Api::V1::Videos::IndexService.new(user: @user, page: params[:page] || 1).call
-        
+
         render json: result, status: :ok
       end
 
@@ -18,13 +18,13 @@ module Api
         elsif result[:success]
           render json: result, status: :ok
         else
-          render json: result, status: :unprocessable_entity
+          render json: result, status: :unprocessable_content
         end
       end
 
       def destroy
         result = Api::V1::Videos::DestroyService.new(current_user, params[:id]).call
-        
+
         status = result[:status] || (result[:success] ? :ok : :unprocessable_entity)
         render json: result, status: status
       end

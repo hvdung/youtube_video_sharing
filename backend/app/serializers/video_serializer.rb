@@ -5,7 +5,5 @@ class VideoSerializer < ActiveModel::Serializer
     object.user&.email
   end
 
-  def user_id
-    object.user_id
-  end
+  delegate :user_id, to: :object
 end

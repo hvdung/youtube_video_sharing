@@ -21,12 +21,12 @@ module Api
             videos: paged.map { |video| VideoSerializer.new(video).as_json },
             count: base.count,
             pagination: {
-              current_page:  paged.current_page,
-              total_pages:   paged.total_pages,
-              total_count:   paged.total_count,
-              per_page:      PER_PAGE,
-              next_page:     paged.next_page,
-              prev_page:     paged.prev_page
+              current_page: paged.current_page,
+              total_pages: paged.total_pages,
+              total_count: paged.total_count,
+              per_page: PER_PAGE,
+              next_page: paged.next_page,
+              prev_page: paged.prev_page
             }
           }
         end

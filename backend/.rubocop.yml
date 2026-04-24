@@ -1,0 +1,214 @@
+plugins:
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  DisplayCopNames: true
+  StyleGuideCopsOnly: false
+  TargetRubyVersion: 2.7
+  Exclude:
+    - db/**/*
+    - script/**/*
+    - bin/**/*
+    - vendor/**/*
+    - docker/**/*
+    - tmp/**/*
+    - docker/**/*
+    - spec/fixtures/**/*
+    - config/initializers/**/*
+    - config/environments/**/*
+    - config/application.rb
+    - ./Gemfile
+    - ./Rakefile
+    - ./config.ru
+    - ./node_modules/**/*
+    - csv_reports/**/*
+    - metroengines_gems/**/*
+
+Rails/UnknownEnv:
+  Environments:
+  - production
+  - staging
+  - development
+  - test
+
+Rails:
+  Enabled: true
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/EnumHash:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - app/helpers/application_helper.rb
+
+Style/Documentation:
+  Enabled: false
+
+Layout/TrailingEmptyLines:
+  Enabled: false
+
+Layout/MultilineBlockLayout:
+  Exclude:
+    - spec/**/*
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Exclude:
+    - spec/**/*
+
+Style/StructInheritance:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/RescueModifier:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i':   '[]'
+    '%I':   '[]'
+    '%r':   '{}'
+    '%w':   '[]'
+    '%W':   '[]'
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/FloatDivision:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: true
+  Max: 120
+  Exclude:
+    - spec/**/*
+    - features/**/*
+
+Metrics/PerceivedComplexity:
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Max: 15
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20
+  Exclude:
+    - spec/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - lib/tasks/**/*
+
+Metrics/ClassLength:
+  Exclude:
+    - app/services/sc/prices/updater.rb
+    - app/services/sc/recommended_prices/updater.rb
+
+Metrics/ModuleLength:
+  Exclude:
+    - app/models/concerns/hotels/pms_data.rb
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Style/RedundantConstantBase:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+  AutoCorrect: true
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: double_quotes
+  AutoCorrect: true

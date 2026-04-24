@@ -19,16 +19,14 @@ module Youtube
       raise VideoNotFound, "Video not found" if video.title.blank?
 
       {
-        youtube_id:    youtube_id,
-        title:         video.title,
-        description:   video.description,
+        youtube_id: youtube_id,
+        title: video.title,
+        description: video.description,
         thumbnail_url: video.thumbnail_url(:high),
         channel_title: video.channel_title
       }
-
     rescue Yt::Errors::NoItems
       raise VideoNotFound, "Video not found or is private"
-
     rescue Yt::Errors::RequestError => e
       raise ApiError, "YouTube API error: #{e.message}"
     end

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
   include ActionController::Cookies
-  
+
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
@@ -9,20 +9,19 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_user!
-    token = request.headers['Authorization']&.split(' ')&.last
+    token = request.headers["Authorization"]&.split&.last
     return render json: { error: "Unauthorized" }, status: :unauthorized unless token
 
     begin
-      decoded = JWT.decode(token, ENV.fetch("DEVISE_JWT_SECRET_KEY", "fallback_secret_key_change_in_production"), true, { algorithm: 'HS256' })
-      @current_user = User.find(decoded[0]['sub'])
+      decoded = JWT.decode(token, ENV.fetch("DEVISE_JWT_SECRET_KEY", "fallback_secret_key_change_in_production"), true,
+                           { algorithm: "HS256" })
+      @current_user = User.find(decoded[0]["sub"])
     rescue JWT::DecodeError, ActiveRecord::RecordNotFound
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 
-  def current_user
-    @current_user
-  end
+  attr_reader :current_user
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
@@ -34,6 +33,6 @@ class ApplicationController < ActionController::API
   end
 
   def unprocessable_entity(exception)
-    render json: { error: exception.message }, status: :unprocessable_entity
+    render json: { error: exception.message }, status: :unprocessable_content
   end
 end

@@ -1,7 +1,6 @@
 module Api
   module V1
     class TokenController < ApplicationController
-
       def refresh
         token_string = params[:refresh_token]
         return render json: { error: "Refresh token is required" }, status: :bad_request if token_string.blank?
