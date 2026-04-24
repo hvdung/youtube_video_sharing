@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { Video } from '@/types/video'
 import Image from 'next/image'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useParams } from 'next/navigation'
 import { useDeleteVideo } from '../hooks/useDeleteVideo'
+import ConfirmModal from '@/shared/components/ConfirmModal'
 
 interface VideoCardProps {
   video: Video
@@ -18,12 +20,31 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
   const { handleDelete, isDeleting } = useDeleteVideo(userId)
 
   const isOwner = user?.id === video.user_id
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  const handleDeleteClick = () => setShowConfirm(true)
+  const handleConfirm = async () => {
+    await handleDelete(video.id)
+    setShowConfirm(false)
+  }
+  const handleCancel = () => setShowConfirm(false)
 
   return (
-    <div className="flex gap-6 p-4 bg-white border-2 border-gray-900 rounded-lg hover:shadow-md transition-shadow relative">
+    <>
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Xóa video"
+        message={`Bạn có chắc muốn xóa "${video.title}" không? Hành động này không thể hoàn tác.`}
+        confirmLabel="Xóa"
+        cancelLabel="Hủy"
+        isLoading={isDeleting}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+      <div className="flex gap-6 p-4 bg-white border-2 border-gray-900 rounded-lg hover:shadow-md transition-shadow relative">
       {isOwner && (
         <button
-          onClick={() => handleDelete(video.id)}
+          onClick={handleDeleteClick}
           disabled={isDeleting}
           className="absolute top-2 right-2 w-8 h-8 bg-gray-900 hover:bg-gray-700 disabled:bg-gray-400 text-white rounded-full flex items-center justify-center transition-colors z-10"
           title="Delete video"
@@ -103,6 +124,7 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

@@ -7,10 +7,6 @@ export function useDeleteVideo(userId?: string) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async (videoId: number) => {
-    if (!confirm('Are you sure you want to delete this video?')) {
-      return
-    }
-
     setIsDeleting(true)
     try {
       await dispatch(deleteVideoAsync(videoId)).unwrap()
