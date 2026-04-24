@@ -23,4 +23,6 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   config.active_record.dump_schema_after_migration = false
+
+  config.middleware.delete ActionDispatch::HostAuthorization
 end
