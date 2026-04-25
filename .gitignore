@@ -1,5 +1,6 @@
 # Backend
 backend/.env
+backend/.env.production
 backend/tmp/
 backend/log/
 backend/storage/
@@ -13,3 +14,5 @@ frontend/.next/
 # Docker
 *.log
 .DS_Store
+
+.env
