@@ -1,44 +1,54 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { loginAsync } from '@/store/slices/authSlice'
 
-interface LoginFormData {
-  email: string
-  password: string
-}
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+type LoginFormData = z.infer<typeof loginSchema>
 
 export const useLoginLogic = () => {
   const router = useRouter()
-  const { login, error, isLoading, clearError } = useAuth()
-  const [formError, setFormError] = useState<string | null>(null)
+  const { isAuthenticated, login, error, isLoading, clearError } = useAuth()
 
-  const handleLogin = useCallback(
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  })
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/videos')
+    }
+  }, [isAuthenticated, router])
+
+  const onSubmit = useCallback(
     async (data: LoginFormData) => {
-      try {
-        setFormError(null)
-        clearError()
-
-        const result = await login(data.email, data.password)
-
-        if (loginAsync.fulfilled.match(result)) {
-          router.push('/videos')
-        } else {
-          setFormError('Login failed. Please check your credentials.')
-        }
-      } catch (err) {
-        setFormError('An error occurred during login')
-        console.error('Login error:', err)
+      clearError()
+      const result = await login(data.email, data.password)
+      if (loginAsync.fulfilled.match(result)) {
+        router.push('/videos')
       }
     },
     [login, router, clearError]
   )
 
   return {
-    handleLogin,
-    isLoading,
-    error: formError || error,
+    onSubmit: handleSubmit(onSubmit),
+    register,
+    errors,
+    isSubmitting: isSubmitting || isLoading,
+    serverError: error,
   }
 }
