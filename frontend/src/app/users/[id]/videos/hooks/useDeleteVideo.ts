@@ -11,7 +11,7 @@ export function useDeleteVideo(userId?: string) {
     try {
       await dispatch(deleteVideoAsync(videoId)).unwrap()
       if (userId) {
-        dispatch(fetchVideosByUserIdAsync(userId))
+        dispatch(fetchVideosByUserIdAsync({ userId }))
       }
     } catch (error: any) {
       alert(error || 'Failed to delete video')
