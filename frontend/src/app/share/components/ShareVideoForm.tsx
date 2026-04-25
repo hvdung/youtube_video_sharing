@@ -6,9 +6,9 @@ export default function ShareVideoForm() {
   const { register, handleSubmit, errors, isSubmitting } = useShareVideo()
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-      <div className="bg-white border-2 border-gray-900 rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] px-4 py-8">
+      <div className="bg-white border-2 border-gray-900 rounded-lg p-6 sm:p-8 w-full max-w-md">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">
           Share a Youtube movie
         </h2>
         
