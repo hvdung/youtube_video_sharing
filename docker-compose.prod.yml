@@ -65,6 +65,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://175.41.180.15:3000
+        NEXT_PUBLIC_CABLE_URL: ws://175.41.180.15:3000/cable
     restart: always
     ports:
       - "4000:4000"
