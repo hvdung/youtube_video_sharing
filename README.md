@@ -31,7 +31,8 @@ Password: password123
 ### Running the Application
 1. Start server:
 docker compose up -d
-2. Access: http://localhost:4000
+2. Access local: http://localhost:4000
+Access on web: http://175.41.180.15:4000
 3. Run test:
 docker compose exec backend bundle exec rspec
 
