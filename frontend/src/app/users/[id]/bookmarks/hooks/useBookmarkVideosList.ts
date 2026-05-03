@@ -8,10 +8,14 @@ import {
   clearBookmarks,
 } from '@/store/slices/bookmarkSlice'
 
-export const useUserBookmarkVideosList = (userId: string) => {
-  const [currentPage, setCurrentPage] = useState(1)
+export const useUserBookmarkVideosList = (userId: string, initialPage: number = 1) => {
+  const [currentPage, setCurrentPage] = useState(initialPage)
   const dispatch = useAppDispatch()
   const { bookmarks, isLoading, error, count, pagination } = useAppSelector((state) => state.bookmark)
+
+  useEffect(() => {
+    setCurrentPage(initialPage)
+  }, [initialPage])
 
   useEffect(() => {
     if (userId) {

@@ -1,13 +1,35 @@
 'use client'
 
 import { useCallback } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useAllVideosList } from './hooks/useAllVideosList'
 import { useActionCable } from '@/lib/useActionCable'
 import VideoList from '@/app/users/[id]/videos/components/VideoList'
 import Pagination from '@/shared/components/Pagination'
 
 export default function AllVideosPage() {
-  const { videos, isLoading, error, count, pagination, changePage, refetch } = useAllVideosList()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const currentPageFromQuery = Math.max(1, Number(searchParams.get('page') || '1') || 1)
+  const { videos, isLoading, error, count, pagination, changePage, refetch } = useAllVideosList(currentPageFromQuery)
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      changePage(page)
+
+      const params = new URLSearchParams(searchParams.toString())
+      if (page <= 1) {
+        params.delete('page')
+      } else {
+        params.set('page', String(page))
+      }
+
+      const query = params.toString()
+      router.push(query ? `${pathname}?${query}` : pathname)
+    },
+    [changePage, pathname, router, searchParams]
+  )
 
   const handleCableMessage = useCallback(
     (data: Record<string, unknown>) => {
@@ -35,7 +57,7 @@ export default function AllVideosPage() {
 
         <VideoList videos={videos} isLoading={isLoading} error={error} sharedBy="" />
 
-        {pagination && <Pagination pagination={pagination} onPageChange={changePage} />}
+        {pagination && <Pagination pagination={pagination} onPageChange={handlePageChange} />}
       </div>
     </div>
   )

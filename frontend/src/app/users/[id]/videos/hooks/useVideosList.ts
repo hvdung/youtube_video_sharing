@@ -3,9 +3,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useVideos } from '@/shared/hooks/useVideos'
 
-export const useVideosList = (userId: string) => {
+export const useVideosList = (userId: string, initialPage: number = 1) => {
   const { videos, isLoading, error, count, pagination, fetchVideosByUserId, clearVideos } = useVideos()
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(initialPage)
+
+  useEffect(() => {
+    setCurrentPage(initialPage)
+  }, [initialPage])
 
   useEffect(() => {
     if (userId) {

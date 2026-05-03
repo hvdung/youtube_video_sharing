@@ -1,6 +1,7 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import { useCallback } from 'react'
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useVideosList } from './hooks/useVideosList'
 import VideoList from './components/VideoList'
 import { useAuth } from '@/shared/hooks/useAuth'
@@ -8,10 +9,31 @@ import Pagination from '@/shared/components/Pagination'
 
 export default function UserVideosPage() {
   const params = useParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const userId = params.id as string
+  const currentPageFromQuery = Math.max(1, Number(searchParams.get('page') || '1') || 1)
   const { user } = useAuth()
 
-  const { videos, isLoading, error, count, pagination, changePage } = useVideosList(userId)
+  const { videos, isLoading, error, count, pagination, changePage } = useVideosList(userId, currentPageFromQuery)
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      changePage(page)
+
+      const params = new URLSearchParams(searchParams.toString())
+      if (page <= 1) {
+        params.delete('page')
+      } else {
+        params.set('page', String(page))
+      }
+
+      const query = params.toString()
+      router.push(query ? `${pathname}?${query}` : pathname)
+    },
+    [changePage, pathname, router, searchParams]
+  )
 
   const sharedBy = user?.id.toString() === userId ? user.email : `user_${userId}`
 
@@ -30,7 +52,7 @@ export default function UserVideosPage() {
 
         <VideoList videos={videos} isLoading={isLoading} error={error} sharedBy={sharedBy} />
 
-        {pagination && <Pagination pagination={pagination} onPageChange={changePage} />}
+        {pagination && <Pagination pagination={pagination} onPageChange={handlePageChange} />}
       </div>
     </div>
   )
