@@ -32,5 +32,13 @@ video_data.each do |data|
   end
 end
 
+videos = Video.all
+videos.each do |video|
+  Bookmark.find_or_create_by!(user: admin, video: video) do |bookmark|
+    bookmark.noted = "This is a note for #{video.title}"
+  end
+end
+
 puts "Created #{Video.count} videos"
+puts "Created #{Bookmark.count} bookmarks for admin user"
 puts "Seed completed!"

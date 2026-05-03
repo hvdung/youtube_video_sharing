@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [] do
         resources :videos, only: :index
+        resources :bookmarks, only: %i[index create destroy]
       end
 
       resources :videos, only: %i[index create destroy]

@@ -10,4 +10,5 @@ class User < ApplicationRecord
 
   has_many :refresh_tokens, dependent: :destroy
   has_many :videos, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
 end

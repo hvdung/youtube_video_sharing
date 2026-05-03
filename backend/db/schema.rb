@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_22_104943) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_03_072612) do
+  create_table "bookmarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "video_id", null: false
+    t.text "noted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
+  end
+
   create_table "refresh_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "token", null: false
@@ -50,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_22_104943) do
     t.index ["youtube_id", "user_id"], name: "index_videos_on_youtube_id_and_user_id", unique: true
   end
 
+  add_foreign_key "bookmarks", "users"
   add_foreign_key "refresh_tokens", "users"
   add_foreign_key "videos", "users"
 end

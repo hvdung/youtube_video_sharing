@@ -7,4 +7,6 @@ class Video < ApplicationRecord
                            message: "You have already shared this video."
                          }
   validates :title, presence: true
+
+  has_many :bookmarks, dependent: :destroy
 end

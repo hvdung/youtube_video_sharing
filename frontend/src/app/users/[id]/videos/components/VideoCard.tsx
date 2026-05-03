@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Video } from '@/types/video'
 import Image from 'next/image'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useParams } from 'next/navigation'
 import { useDeleteVideo } from '../hooks/useDeleteVideo'
 import ConfirmModal from '@/shared/components/ConfirmModal'
+import { useToggleBookmark } from '../hooks/useToggleBookmark'
 
 interface VideoCardProps {
   video: Video
@@ -18,6 +19,7 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
   const params = useParams()
   const userId = params.id as string
   const { handleDelete, isDeleting } = useDeleteVideo(userId)
+  const { toggleBookmark, syncBookmarkFromServer, isBookmarked, isToggling } = useToggleBookmark(user?.id)
 
   const isOwner = user?.id === video.user_id
   const [showConfirm, setShowConfirm] = useState(false)
@@ -28,6 +30,11 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
     setShowConfirm(false)
   }
   const handleCancel = () => setShowConfirm(false)
+
+  useEffect(() => {
+    if (!user) return
+    syncBookmarkFromServer(video.id)
+  }, [user, video.id, syncBookmarkFromServer])
 
   return (
     <>
@@ -43,6 +50,30 @@ export default function VideoCard({ video, sharedBy }: VideoCardProps) {
       />
 
       <div className="flex flex-col sm:flex-row gap-0 sm:gap-4 bg-white border-2 border-gray-900 rounded-lg hover:shadow-md transition-shadow relative overflow-hidden">
+
+        {user && (
+          <button
+            onClick={() => toggleBookmark(video.id)}
+            disabled={isToggling(video.id)}
+            className={`absolute top-2 ${isOwner ? 'right-11' : 'right-2'} w-7 h-7 sm:w-8 sm:h-8 bg-white border-2 border-gray-900 hover:bg-gray-100 disabled:bg-gray-100 text-gray-900 rounded-full flex items-center justify-center transition-colors z-10`}
+            title={isBookmarked(video.id) ? 'Remove bookmark' : 'Bookmark video'}
+          >
+            {isToggling(video.id) ? (
+              <svg className="animate-spin h-3.5 w-3.5 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+            ) : isBookmarked(video.id) ? (
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 2a2 2 0 00-2 2v18l8-4 8 4V4a2 2 0 00-2-2H6z" />
+              </svg>
+            ) : (
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 2h12a2 2 0 012 2v18l-8-4-8 4V4a2 2 0 012-2z" />
+              </svg>
+            )}
+          </button>
+        )}
 
         {isOwner && (
           <button

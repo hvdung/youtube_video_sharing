@@ -54,12 +54,20 @@ export default function Header() {
                 All Videos
               </button>
               {user && (
-                <button
-                  onClick={() => router.push(`/users/${user.id}/videos`)}
-                  className={navLinkClass(pathname.includes('/users'))}
-                >
-                  My Videos
-                </button>
+                <>
+                  <button
+                    onClick={() => router.push(`/users/${user.id}/videos`)}
+                    className={navLinkClass(pathname === `/users/${user.id}/videos`)}
+                  >
+                    My Videos
+                  </button>
+                  <button
+                    onClick={() => router.push(`/users/${user.id}/bookmarks`)}
+                    className={navLinkClass(pathname === `/users/${user.id}/bookmarks`)}
+                  >
+                    My Bookmarks
+                  </button>
+                </>
               )}
             </div>
           </div>
@@ -129,9 +137,15 @@ export default function Header() {
           </button>
           <button
             onClick={() => { router.push(`/users/${user.id}/videos`); setMobileMenuOpen(false) }}
-            className={`w-full text-left ${navLinkClass(pathname.includes('/users'))}`}
+            className={`w-full text-left ${navLinkClass(pathname === `/users/${user.id}/videos`)}`}
           >
             My Videos
+          </button>
+          <button
+            onClick={() => { router.push(`/users/${user.id}/bookmarks`); setMobileMenuOpen(false) }}
+            className={`w-full text-left ${navLinkClass(pathname === `/users/${user.id}/bookmarks`)}`}
+          >
+            My Bookmarks
           </button>
         </div>
       )}
