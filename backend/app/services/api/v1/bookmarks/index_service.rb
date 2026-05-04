@@ -4,18 +4,20 @@ module Api
       class IndexService
         PER_PAGE = 5
 
-        attr_reader :user, :page
+        attr_reader :user, :page, :query
 
-        def initialize(user: nil, page: 1)
+        def initialize(user: nil, page: 1, query: {})
           @user = user
           @page = page.to_i
+          @query = query || {}
         end
 
         def call
           return { success: false, error: "User not found" } unless user
 
           scope = user.bookmarks
-          base   = scope.includes(:video).order(created_at: :desc)
+          search = scope.ransack(query)
+          base   = search.result(distinct: true).includes(:video).order('bookmarks.created_at DESC')
           paged  = base.page(@page).per(PER_PAGE)
 
           {

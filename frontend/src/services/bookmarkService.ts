@@ -7,8 +7,14 @@ import {
 } from '@/types/bookmark'
 
 export const bookmarkService = {
-  async getBookmarksByUserId(userId: string, page = 1): Promise<BookmarkListResponse> {
-    const response = await apiClient.get(`/users/${userId}/bookmarks`, { params: { page } })
+  async getBookmarksByUserId(userId: string, page = 1, query = ''): Promise<BookmarkListResponse> {
+    const params: Record<string, unknown> = { page }
+
+    if (query.trim()) {
+      params.q = { video_title_cont: query.trim() }
+    }
+
+    const response = await apiClient.get(`/users/${userId}/bookmarks`, { params })
     return response.data
   },
 

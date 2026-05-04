@@ -23,9 +23,9 @@ const initialState: BookmarkState = {
 
 export const fetchUserBookmarksAsync = createAsyncThunk(
   'bookmark/fetchByUserId',
-  async ({ userId, page = 1 }: { userId: string; page?: number }, { rejectWithValue }) => {
+  async ({ userId, page = 1, query = '' }: { userId: string; page?: number; query?: string }, { rejectWithValue }) => {
     try {
-      const response = await bookmarkService.getBookmarksByUserId(userId, page)
+      const response = await bookmarkService.getBookmarksByUserId(userId, page, query)
       return response
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch bookmarks')

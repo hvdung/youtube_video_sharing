@@ -8,7 +8,7 @@ import {
   clearBookmarks,
 } from '@/store/slices/bookmarkSlice'
 
-export const useUserBookmarkVideosList = (userId: string, initialPage: number = 1) => {
+export const useUserBookmarkVideosList = (userId: string, initialPage: number = 1, query: string = '') => {
   const [currentPage, setCurrentPage] = useState(initialPage)
   const dispatch = useAppDispatch()
   const { bookmarks, isLoading, error, count, pagination } = useAppSelector((state) => state.bookmark)
@@ -19,13 +19,13 @@ export const useUserBookmarkVideosList = (userId: string, initialPage: number = 
 
   useEffect(() => {
     if (userId) {
-      dispatch(fetchUserBookmarksAsync({ userId, page: currentPage }))
+      dispatch(fetchUserBookmarksAsync({ userId, page: currentPage, query }))
     }
 
     return () => {
       dispatch(clearBookmarks())
     }
-  }, [userId, currentPage, dispatch])
+  }, [userId, currentPage, query, dispatch])
 
   const clearVideoError = useCallback(() => {
     dispatch(clearBookmarkError())

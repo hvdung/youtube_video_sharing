@@ -5,7 +5,11 @@ module Api
       before_action :set_user, only: %i[index create destroy]
 
       def index
-        result = Api::V1::Bookmarks::IndexService.new(user: @user, page: params[:page] || 1).call
+        result = Api::V1::Bookmarks::IndexService.new(
+          user: @user,
+          page: params[:page] || 1,
+          query: search_query_params
+        ).call
 
         render json: result, status: :ok
       end
@@ -37,6 +41,12 @@ module Api
 
       def bookmark_params
         params.require(:bookmark).permit(:video_id, :noted)
+      end
+
+      def search_query_params
+        return {} unless params[:q].present?
+
+        params.require(:q).permit(:video_title_cont).to_h
       end
     end
   end
